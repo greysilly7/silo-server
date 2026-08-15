@@ -20,13 +20,12 @@ buildGoModule {
   pname = "silo-server";
   inherit version src;
 
-  # Placeholder — `nix build` will report the real hash on mismatch.
-  # Bump alongside go.sum whenever dependencies change.
-  vendorHash = lib.fakeHash;
+  # Bump alongside go.sum.
+  vendorHash = "sha256-Lzqzs35cq7+KDCz/E6zfM7SQtvpZvSRdSACunjFhpH4=";
 
   subPackages = [ "cmd/silo" ];
 
-  # mattn/go-sqlite3 and h2non/bimg (libvips bindings) both need cgo.
+  # go-sqlite3 and bimg (libvips bindings) both need cgo.
   env.CGO_ENABLED = "1";
 
   nativeBuildInputs = [
@@ -36,8 +35,7 @@ buildGoModule {
 
   buildInputs = [ vips ];
 
-  # Mirrors the Dockerfile's multi-stage build: the frontend is built
-  # separately and its `dist/` embedded via `web/embed.go`'s `//go:embed`.
+  # web/embed.go go:embeds web/dist, same as the Dockerfile's frontend stage.
   preBuild = ''
     rm -rf web/dist
     cp -r ${frontend} web/dist

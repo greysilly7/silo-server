@@ -13,17 +13,14 @@ stdenv.mkDerivation (finalAttrs: {
   pname = "silo-server-frontend";
   inherit version src;
 
-  # `src` is expected to be the repo's `web/` subdirectory, so no
-  # `sourceRoot` juggling is needed here. `web/vendor/foliate-js` is a
-  # `file:` workspace dependency checked straight into the repo, and
-  # since it lives under `web/` it's already present in `src`.
+  # `src` is the repo's `web/` subdirectory, which already contains the
+  # `file:`-referenced vendor/foliate-js workspace package.
   pnpmDeps = fetchPnpmDeps {
     inherit (finalAttrs) pname version src;
     pnpm = pnpm_10;
     fetcherVersion = 4;
-    # Placeholder — `nix build` will report the real hash on mismatch.
-    # Bump alongside pnpm-lock.yaml whenever it changes.
-    hash = lib.fakeHash;
+    # Bump alongside web/pnpm-lock.yaml.
+    hash = "sha256-Jo6Qm4B4d0xO5escR8bhPknwRbJX1s4Fc1JZQXotLXE=";
   };
 
   nativeBuildInputs = [
